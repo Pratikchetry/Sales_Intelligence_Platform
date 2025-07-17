@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+import matplotlib.pyplot as plt
 
 # Connect to SQLite DB
 conn = sqlite3.connect("db/sales.db")
@@ -38,20 +39,21 @@ date_range = st.sidebar.date_input(
     "Select Date Range", [df['order_date'].min(), df['order_date'].max()]
 )
 
-# --- Filter based on sidebar inputs and search ---
+# --- Filter based on sidebar inputs ---
 filtered_df = df[
     (df['region'].isin(region_filter)) &
     (df['category'].isin(category_filter)) &
     (df['order_date'].between(pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])))
 ]
 
+# --- Apply search AFTER other filters ---
 if search_query:
     search_query = search_query.lower()
     filtered_df = filtered_df[
-        df['customer_name'].str.lower().str.contains(search_query) |
-        df['product_name'].str.lower().str.contains(search_query) |
-        df['brand'].str.lower().str.contains(search_query) |
-        df['region'].str.lower().str.contains(search_query)
+        filtered_df['customer_name'].str.lower().str.contains(search_query) |
+        filtered_df['product_name'].str.lower().str.contains(search_query) |
+        filtered_df['brand'].str.lower().str.contains(search_query) |
+        filtered_df['region'].str.lower().str.contains(search_query)
     ]
 
 # --- Dashboard ---
@@ -93,14 +95,14 @@ st.bar_chart(region_sales['revenue'])
 # --- Customer Gender Distribution ---
 st.subheader("👥 Customer Gender Distribution")
 gender_counts = filtered_df['gender'].value_counts()
-st.pyplot(
-    gender_counts.plot.pie(
-        autopct='%1.1f%%',
-        figsize=(5, 5),
-        title="Customer Gender Split",
-        ylabel=''
-    ).get_figure()
+fig, ax = plt.subplots()
+gender_counts.plot.pie(
+    autopct='%1.1f%%',
+    startangle=90,
+    ylabel='',
+    ax=ax
 )
+st.pyplot(fig)
 
 # --- Top 5 Customers ---
 st.subheader("💰 Top 5 Customers by Revenue")
@@ -122,6 +124,7 @@ st.download_button(
     file_name='filtered_sales_data.csv',
     mime='text/csv'
 )
+
 
 
 
