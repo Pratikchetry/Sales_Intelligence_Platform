@@ -3,4 +3,3 @@ pandas
 faker
 matplotlib
 seaborn
-sqlite3
