@@ -1,6 +1,6 @@
 # 📊 Smart Sales Intelligence Dashboard
 
-This is an interactive, end-to-end **Sales Intelligence Platform** built using Python, Streamlit, SQLite, and Pandas. It allows users to explore synthetic sales data through a visually engaging dashboard, apply filters, search queries, and download custom reports — all in real time.
+This is an interactive, end-to-end **Sales Intelligence Platform** built using Python, Streamlit, SQLite, and Pandas. It allows users to explore synthetic sales data through a visually engaging dashboards, apply filters, search queries, and download custom reports — all in real time.
 
 ---
 
